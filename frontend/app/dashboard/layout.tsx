@@ -9,7 +9,7 @@ export default async function DashboardLayout({ children }: Props) {
   const authSession = await auth();
 
   if (!authSession) {
-    return redirect("/sign-in");
+    return redirect("/");
   }
 
   return <main className="flex antialiased w-full h-screen">{children}</main>;
