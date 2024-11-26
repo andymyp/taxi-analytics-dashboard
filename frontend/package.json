@@ -1,6 +1,7 @@
 {
   "name": "taxi-analytics-frontend",
   "version": "0.1.0",
+  "author": "andymyp <andymyp1997@gmail.com>",
   "private": true,
   "scripts": {
     "dev": "next dev",
