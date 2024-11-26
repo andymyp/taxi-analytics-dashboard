@@ -38,13 +38,14 @@ export default function TaxiScene({
       {camera || (
         <PerspectiveCamera
           makeDefault
-          fov={45}
+          fov={60}
           near={0.1}
-          far={1000}
-          position={[40, 200, 40]}
+          far={400}
+          position={[1, 100, -1]}
           rotation={[radians(60), 0, 0]}
         />
       )}
+
       {children}
 
       {orbitControls ? (
@@ -59,7 +60,7 @@ export default function TaxiScene({
       {/* Road */}
 
       <Plane
-        args={[1000, 24]}
+        args={[350, 24]}
         position={[0, -0.2, 0]}
         rotation={[radians(-90), 0, 0]}
       >
