@@ -1,0 +1,55 @@
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { User } from './user.model';
+
+@Injectable()
+export class UsersService {
+  protected readonly logger = new Logger(UsersService.name);
+
+  constructor(@InjectModel(User) private readonly userModel: typeof User) {}
+
+  async create(user: Partial<User>): Promise<User> {
+    try {
+      const created = await this.userModel.create(user);
+      return created;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async findById(id: number): Promise<User> {
+    const finded = await this.userModel.findByPk(id);
+    return finded;
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    const finded = await this.userModel.findOne({ where: { email } });
+    return finded;
+  }
+
+  async findOrCreate(user: Partial<User>): Promise<User> {
+    const [upserted] = await this.userModel.findOrCreate({
+      where: { email: user.email },
+      defaults: user,
+    });
+
+    return upserted;
+  }
+
+  async update(data: Partial<User>): Promise<User> {
+    const user = await this.userModel.findByPk(data.id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const updated = await user.update(data);
+    return updated;
+  }
+}

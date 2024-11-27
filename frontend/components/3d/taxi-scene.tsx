@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, Plane } from "@react-three/drei";
 import { radians } from "@/lib/3d";
 import {
@@ -14,6 +14,42 @@ import Spawner from "./spawner";
 import * as THREE from "three";
 import Taxi from "./taxi";
 import BuildingSet from "./building-set";
+import { useEffect } from "react";
+
+const SceneDisposer: React.FC = () => {
+  const { scene, gl } = useThree();
+
+  useEffect(() => {
+    return () => {
+      scene.traverse((object: THREE.Object3D) => {
+        if (object instanceof THREE.BufferGeometry) {
+          object.dispose();
+        }
+
+        if (object instanceof THREE.Mesh) {
+          object.geometry?.dispose();
+
+          if (object.material instanceof THREE.Material) {
+            const material = object.material;
+            if (Array.isArray(material)) {
+              material.forEach((mat) => mat.dispose());
+            } else {
+              material.dispose();
+            }
+          }
+        }
+
+        if ((object as any).texture) {
+          (object as any).texture.dispose();
+        }
+      });
+
+      gl.dispose();
+    };
+  }, [scene, gl]);
+
+  return null;
+};
 
 interface Props {
   camera?: React.ReactNode;
@@ -35,16 +71,19 @@ export default function TaxiScene({
           "linear-gradient(to top right, hsl(0, 0%, 8%), hsl(52, 0%, 18%))",
       }}
     >
+      <SceneDisposer />
+
       {camera || (
         <PerspectiveCamera
           makeDefault
-          fov={45}
+          fov={60}
           near={0.1}
-          far={1000}
-          position={[40, 200, 40]}
+          far={400}
+          position={[1, 100, -1]}
           rotation={[radians(60), 0, 0]}
         />
       )}
+
       {children}
 
       {orbitControls ? (
@@ -59,7 +98,7 @@ export default function TaxiScene({
       {/* Road */}
 
       <Plane
-        args={[1000, 24]}
+        args={[350, 24]}
         position={[0, -0.2, 0]}
         rotation={[radians(-90), 0, 0]}
       >
