@@ -23,6 +23,7 @@ export class AppService implements OnModuleInit {
       const adminPassword = this.config.get<string>('ADMIN_PASSWORD');
 
       await this.userService.findOrCreate({
+        name: 'Admin',
         email: adminEmail,
         password: await bcrypt.hash(adminPassword, 10),
       });
