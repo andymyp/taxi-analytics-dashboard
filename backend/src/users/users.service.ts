@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
@@ -39,5 +40,16 @@ export class UsersService {
     });
 
     return upserted;
+  }
+
+  async update(data: Partial<User>): Promise<User> {
+    const user = await this.userModel.findByPk(data.id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const updated = await user.update(data);
+    return updated;
   }
 }
