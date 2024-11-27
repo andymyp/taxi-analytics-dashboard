@@ -9,6 +9,9 @@ import { Input } from "@/components/ui/input";
 import { EyeIcon, EyeOffIcon, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux";
+import { SignInAction } from "@/actions/auth-action";
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
@@ -19,7 +22,9 @@ type FormValues = z.infer<typeof schema>;
 
 export default function SignInForm() {
   const { toast } = useToast();
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -30,13 +35,13 @@ export default function SignInForm() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    console.log("data", data);
+  const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
+    await dispatch(SignInAction(formValues, router));
   };
 
   const onError: SubmitErrorHandler<FormValues> = (errors) => {
     toast({
-      variant: "destructive",
+      variant: "error",
       description: Object.values(errors)[0].message,
     });
   };
