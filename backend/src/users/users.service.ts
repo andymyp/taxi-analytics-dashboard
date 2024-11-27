@@ -33,12 +33,8 @@ export class UsersService {
     return finded;
   }
 
-  async findOrCreate(user: Partial<User>): Promise<User> {
-    const [upserted] = await this.userModel.findOrCreate({
-      where: { email: user.email },
-      defaults: user,
-    });
-
+  async upsert(user: Partial<User>): Promise<User> {
+    const [upserted] = await this.userModel.upsert(user, { returning: true });
     return upserted;
   }
 
