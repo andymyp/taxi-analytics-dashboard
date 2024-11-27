@@ -8,12 +8,11 @@ import * as Joi from 'joi';
       isGlobal: true,
       validationSchema: Joi.object({
         APP_PORT: Joi.number().required(),
+        DATABASE_URI: Joi.string().required(),
 
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRES_IN: Joi.string().required(),
         JWT_REFRESH_EXPIRES_IN: Joi.string().required(),
-
-        REDIS_URI: Joi.string().required(),
       }),
     }),
   ],
