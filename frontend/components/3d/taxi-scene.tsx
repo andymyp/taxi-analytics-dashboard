@@ -15,7 +15,41 @@ import * as THREE from "three";
 import Taxi from "./taxi";
 import BuildingSet from "./building-set";
 import { useEffect } from "react";
-import { Object3D } from "three";
+
+const SceneDisposer: React.FC = () => {
+  const { scene, gl } = useThree();
+
+  useEffect(() => {
+    return () => {
+      scene.traverse((object: THREE.Object3D) => {
+        if (object instanceof THREE.BufferGeometry) {
+          object.dispose();
+        }
+
+        if (object instanceof THREE.Mesh) {
+          object.geometry?.dispose();
+
+          if (object.material instanceof THREE.Material) {
+            const material = object.material;
+            if (Array.isArray(material)) {
+              material.forEach((mat) => mat.dispose());
+            } else {
+              material.dispose();
+            }
+          }
+        }
+
+        if ((object as any).texture) {
+          (object as any).texture.dispose();
+        }
+      });
+
+      gl.dispose();
+    };
+  }, [scene, gl]);
+
+  return null;
+};
 
 interface Props {
   camera?: React.ReactNode;
@@ -151,34 +185,3 @@ export default function TaxiScene({
     </Canvas>
   );
 }
-
-const SceneDisposer: React.FC = () => {
-  const { scene, gl } = useThree();
-
-  useEffect(() => {
-    return () => {
-      scene.traverse((object: Object3D) => {
-        if ((object as any).geometry) {
-          (object as any).geometry.dispose();
-        }
-
-        if ((object as any).material) {
-          const material = (object as any).material;
-          if (Array.isArray(material)) {
-            material.forEach((mat) => mat.dispose());
-          } else {
-            material.dispose();
-          }
-        }
-
-        if ((object as any).texture) {
-          (object as any).texture.dispose();
-        }
-      });
-
-      gl.dispose();
-    };
-  }, [scene, gl]);
-
-  return null;
-};

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import ReduxProvider from "@/components/providers/redux-provider";
+import LoadingBar from "@/components/ui-customs/loading-bar";
 import { Toaster } from "@/components/ui/toaster";
 
 const roboto = Roboto({
@@ -10,7 +12,6 @@ const roboto = Roboto({
 });
 
 import "./globals.css";
-import ReduxProvider from "@/components/providers/redux-provider";
 
 export const metadata: Metadata = {
   title: "Taxi Analytics",
@@ -26,6 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${roboto.variable} antialiased`}>
         <ReduxProvider>
+          <LoadingBar />
           {children}
           <Toaster />
         </ReduxProvider>
