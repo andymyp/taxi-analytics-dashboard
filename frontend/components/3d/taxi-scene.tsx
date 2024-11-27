@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, Plane } from "@react-three/drei";
 import { radians } from "@/lib/3d";
 import {
@@ -14,6 +14,8 @@ import Spawner from "./spawner";
 import * as THREE from "three";
 import Taxi from "./taxi";
 import BuildingSet from "./building-set";
+import { useEffect } from "react";
+import { Object3D } from "three";
 
 interface Props {
   camera?: React.ReactNode;
@@ -35,6 +37,8 @@ export default function TaxiScene({
           "linear-gradient(to top right, hsl(0, 0%, 8%), hsl(52, 0%, 18%))",
       }}
     >
+      <SceneDisposer />
+
       {camera || (
         <PerspectiveCamera
           makeDefault
@@ -147,3 +151,34 @@ export default function TaxiScene({
     </Canvas>
   );
 }
+
+const SceneDisposer: React.FC = () => {
+  const { scene, gl } = useThree();
+
+  useEffect(() => {
+    return () => {
+      scene.traverse((object: Object3D) => {
+        if ((object as any).geometry) {
+          (object as any).geometry.dispose();
+        }
+
+        if ((object as any).material) {
+          const material = (object as any).material;
+          if (Array.isArray(material)) {
+            material.forEach((mat) => mat.dispose());
+          } else {
+            material.dispose();
+          }
+        }
+
+        if ((object as any).texture) {
+          (object as any).texture.dispose();
+        }
+      });
+
+      gl.dispose();
+    };
+  }, [scene, gl]);
+
+  return null;
+};
