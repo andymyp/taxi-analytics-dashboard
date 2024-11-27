@@ -7,7 +7,6 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { EyeIcon, EyeOffIcon, RefreshCcw } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -49,7 +48,7 @@ export default function SignInForm() {
     >
       <Input
         {...register("email")}
-        placeholder="Enter your email"
+        placeholder="Enter email"
         type="text"
         className="w-full"
         name="email"
@@ -58,7 +57,7 @@ export default function SignInForm() {
       <div className="relative w-full">
         <Input
           {...register("password")}
-          placeholder="Enter your password"
+          placeholder="Enter password"
           className="w-full"
           name="password"
           type={showPassword ? "text" : "password"}

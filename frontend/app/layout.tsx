@@ -10,6 +10,7 @@ const roboto = Roboto({
 });
 
 import "./globals.css";
+import ReduxProvider from "@/components/providers/redux-provider";
 
 export const metadata: Metadata = {
   title: "Taxi Analytics",
@@ -24,8 +25,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.variable} antialiased`}>
-        {children}
-        <Toaster />
+        <ReduxProvider>
+          {children}
+          <Toaster />
+        </ReduxProvider>
       </body>
     </html>
   );
