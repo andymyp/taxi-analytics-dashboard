@@ -26,12 +26,16 @@ export class AuthService {
     const tokens = await this.generateTokens(user.id, user.email);
 
     const updated = await this.userService.update({
-      ...user,
+      ...user.get(),
       refreshToken: await bcrypt.hash(tokens.refreshToken, 10),
     });
 
     return {
-      ...updated,
+      user: {
+        id: updated.id,
+        name: updated.name,
+        email: updated.email,
+      },
       ...tokens,
     };
   }
