@@ -18,13 +18,16 @@ export const metadata: Metadata = {
   description: "Taxi Analytics Dashboard by github.com/andymyp",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+      </head>
       <body className={`${roboto.variable} antialiased`}>
         <ReduxProvider>
           <LoadingBar />

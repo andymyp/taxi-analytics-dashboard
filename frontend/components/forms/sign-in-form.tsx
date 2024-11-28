@@ -23,7 +23,6 @@ type FormValues = z.infer<typeof schema>;
 export default function SignInForm() {
   const { toast } = useToast();
   const dispatch = useDispatch<AppDispatch>();
-  const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -36,7 +35,7 @@ export default function SignInForm() {
   });
 
   const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
-    await dispatch(SignInAction(formValues, router));
+    await dispatch(SignInAction(formValues));
   };
 
   const onError: SubmitErrorHandler<FormValues> = (errors) => {
@@ -57,6 +56,7 @@ export default function SignInForm() {
         type="text"
         className="w-full"
         name="email"
+        disabled={formState.isSubmitting}
         autoFocus
       />
       <div className="relative w-full">
@@ -66,6 +66,7 @@ export default function SignInForm() {
           className="w-full"
           name="password"
           type={showPassword ? "text" : "password"}
+          disabled={formState.isSubmitting}
         />
         <button
           type="button"

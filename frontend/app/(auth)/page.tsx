@@ -2,7 +2,7 @@ import TaxiScene from "@/components/3d/taxi-scene";
 import RotatingCamera from "@/components/3d/camera-rotating";
 import SignInForm from "@/components/forms/sign-in-form";
 
-export default function SignInPage() {
+export default async function SignInPage() {
   return (
     <div className="relative w-full h-screen">
       <TaxiScene

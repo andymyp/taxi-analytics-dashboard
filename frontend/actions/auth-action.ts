@@ -4,13 +4,9 @@ import { AppAction } from "@/redux/app-slice";
 import { AuthAction } from "@/redux/auth-slice";
 import { toast } from "@/hooks/use-toast";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { TAuth } from "@/types";
 
-export const SignInAction = (
-  formValues: TAuth,
-  router: ReturnType<typeof useRouter>
-) => {
+export const SignInAction = (formValues: TAuth) => {
   return async (dispatch: AppDispatch, getState: () => AppState) => {
     try {
       dispatch(AppAction.setLoading(true));
@@ -27,11 +23,8 @@ export const SignInAction = (
 
       await signIn("credentials", {
         user: JSON.stringify(data.user),
-        redirect: false,
+        redirectTo: "/dashboard",
       });
-
-      toast({ variant: "success", description: `Welcome ${data.user.name}` });
-      return router.push("/dashboard");
     } catch (error: any) {
       if (error.response) {
         toast({ variant: "error", description: error.response.data.message });
