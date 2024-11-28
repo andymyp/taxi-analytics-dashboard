@@ -10,9 +10,15 @@ import * as Joi from 'joi';
         APP_PORT: Joi.number().required(),
         DATABASE_URI: Joi.string().required(),
 
+        ADMIN_EMAIL: Joi.string().required(),
+        ADMIN_PASSWORD: Joi.string().required(),
+
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRES_IN: Joi.string().required(),
         JWT_REFRESH_EXPIRES_IN: Joi.string().required(),
+
+        NYC_BASE_URL: Joi.string().required(),
+        NYC_APP_TOKEN: Joi.string().required(),
       }),
     }),
   ],
