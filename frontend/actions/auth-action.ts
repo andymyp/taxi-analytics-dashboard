@@ -5,8 +5,12 @@ import { AuthAction } from "@/redux/auth-slice";
 import { toast } from "@/hooks/use-toast";
 import { TAuth } from "@/types";
 import { signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-export const SignInAction = (formValues: TAuth) => {
+export const SignInAction = (
+  formValues: TAuth,
+  router: ReturnType<typeof useRouter>
+) => {
   return async (dispatch: AppDispatch, getState: () => AppState) => {
     try {
       dispatch(AppAction.setLoading(true));
@@ -21,10 +25,15 @@ export const SignInAction = (formValues: TAuth) => {
         })
       );
 
-      await signIn("credentials", {
+      const response = await signIn("credentials", {
         user: JSON.stringify(data.user),
-        redirectTo: "/dashboard",
+        redirect: false,
       });
+
+      if (response?.ok) {
+        toast({ variant: "success", description: `Welcome ${data.user.name}` });
+        router.replace("/dashboard");
+      }
     } catch (error: any) {
       if (error.response) {
         toast({ variant: "error", description: error.response.data.message });
@@ -37,12 +46,17 @@ export const SignInAction = (formValues: TAuth) => {
   };
 };
 
-export const SignOutAction = () => {
+export const SignOutAction = (router: ReturnType<typeof useRouter>) => {
   return async (dispatch: AppDispatch, getState: () => AppState) => {
     try {
       dispatch(AppAction.setLoading(true));
       dispatch(AuthAction.signOut());
-      await signOut({ redirectTo: "/" });
+
+      const response = await signOut({ redirect: false });
+
+      if (response) {
+        router.replace("/");
+      }
     } catch (error: any) {
       if (error.response) {
         toast({ variant: "error", description: error.response.data.message });

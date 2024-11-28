@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import Header from "@/components/ui-customs/header";
@@ -12,7 +12,7 @@ export default async function DashboardLayout({ children }: Props) {
   const authSession = await auth();
 
   if (!authSession) {
-    return redirect("/");
+    return redirect("/", RedirectType.replace);
   }
 
   return (

@@ -23,6 +23,7 @@ type FormValues = z.infer<typeof schema>;
 export default function SignInForm() {
   const { toast } = useToast();
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,7 +36,7 @@ export default function SignInForm() {
   });
 
   const onSubmit: SubmitHandler<FormValues> = async (formValues) => {
-    await dispatch(SignInAction(formValues));
+    await dispatch(SignInAction(formValues, router));
   };
 
   const onError: SubmitErrorHandler<FormValues> = (errors) => {

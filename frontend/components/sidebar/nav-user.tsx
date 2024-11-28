@@ -17,6 +17,7 @@ import {
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux";
 import { SignOutAction } from "@/actions/auth-action";
+import { useRouter } from "next/navigation";
 
 interface Props {
   user: {
@@ -28,6 +29,7 @@ interface Props {
 export function NavUser({ user }: Props) {
   const { isMobile } = useSidebar();
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
   return (
     <SidebarMenu>
@@ -58,7 +60,7 @@ export function NavUser({ user }: Props) {
             sideOffset={4}
           >
             <DropdownMenuItem
-              onClick={async () => await dispatch(SignOutAction())}
+              onClick={async () => await dispatch(SignOutAction(router))}
             >
               <LogOut />
               Sign Out
