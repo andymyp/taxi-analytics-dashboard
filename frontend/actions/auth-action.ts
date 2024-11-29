@@ -50,11 +50,13 @@ export const SignOutAction = (router: ReturnType<typeof useRouter>) => {
   return async (dispatch: AppDispatch, getState: () => AppState) => {
     try {
       dispatch(AppAction.setLoading(true));
-      dispatch(AuthAction.signOut());
 
       const response = await signOut({ redirect: false });
 
       if (response) {
+        dispatch(AppAction.resetState());
+        dispatch(AuthAction.signOut());
+
         router.replace("/");
       }
     } catch (error: any) {

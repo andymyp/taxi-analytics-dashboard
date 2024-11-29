@@ -13,19 +13,72 @@ export class NycService {
 
   constructor(private readonly http: HttpService) {}
 
-  async getTotals(filter: RequestQueryDto) {
-    let query = `SELECT COUNT(*) AS total_trips, SUM(passenger_count) AS total_passengers, 
-                  SUM(fare_amount) AS total_fare, AVG(fare_amount) AS avg_fare`;
-
-    if (filter.start || filter.end) {
-      const dateFilter = await this.filter('pickup_datetime', filter);
-      query += ` WHERE ${dateFilter}`;
-    }
-
+  async totalTrips(filter: RequestQueryDto): Promise<number> {
     try {
-      const request = this.http.get(`?$query=${query}`);
-      const { data } = await lastValueFrom(request);
-      return data[0];
+      const $select = `count(*) as totalTrips`;
+      const $where = await this.filter('pickup_datetime', filter);
+
+      const { data } = await lastValueFrom(
+        this.http.get('/gkne-dk5s.json', {
+          params: { $select, $where },
+        }),
+      );
+
+      return data[0].totalTrips;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async totalPassengers(filter: RequestQueryDto): Promise<number> {
+    try {
+      const $select = `sum(passenger_count) as totalPassengers`;
+      const $where = await this.filter('pickup_datetime', filter);
+
+      const { data } = await lastValueFrom(
+        this.http.get('/gkne-dk5s.json', {
+          params: { $select, $where },
+        }),
+      );
+
+      return data[0].totalPassengers;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async totalFare(filter: RequestQueryDto): Promise<number> {
+    try {
+      const $select = `sum(fare_amount) as totalFare`;
+      const $where = await this.filter('pickup_datetime', filter);
+
+      const { data } = await lastValueFrom(
+        this.http.get('/gkne-dk5s.json', {
+          params: { $select, $where },
+        }),
+      );
+
+      return data[0].totalFare;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(error);
+    }
+  }
+
+  async avgFare(filter: RequestQueryDto): Promise<number> {
+    try {
+      const $select = `avg(fare_amount) as avgFare`;
+      const $where = await this.filter('pickup_datetime', filter);
+
+      const { data } = await lastValueFrom(
+        this.http.get('/gkne-dk5s.json', {
+          params: { $select, $where },
+        }),
+      );
+
+      return data[0].avgFare;
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(error);
@@ -34,11 +87,13 @@ export class NycService {
 
   async filter(field: string, date: RequestQueryDto): Promise<string> {
     if (date.start && date.end) {
-      return `${field} >= '${date.start}' AND ${field} <= '${date.end}'`;
+      return `${field} >= '${date.start}' and ${field} <= '${date.end}'`;
     } else if (date.start) {
       return `${field} >= '${date.start}'`;
     } else if (date.end) {
       return `${field} <= '${date.end}'`;
     }
+
+    return undefined;
   }
 }
