@@ -57,6 +57,7 @@ export default function SignInForm() {
         type="text"
         className="w-full"
         name="email"
+        disabled={formState.isSubmitting}
         autoFocus
       />
       <div className="relative w-full">
@@ -66,6 +67,7 @@ export default function SignInForm() {
           className="w-full"
           name="password"
           type={showPassword ? "text" : "password"}
+          disabled={formState.isSubmitting}
         />
         <button
           type="button"

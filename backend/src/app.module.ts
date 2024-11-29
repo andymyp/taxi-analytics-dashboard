@@ -5,6 +5,7 @@ import { LoggerModule } from './logger/logger.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { NycModule } from './nyc/nyc.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UsersModule } from './users/users.module';
     DatabaseModule,
     AuthModule,
     UsersModule,
+    NycModule,
   ],
   providers: [AppService],
 })

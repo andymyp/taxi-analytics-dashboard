@@ -55,7 +55,7 @@ axios.interceptors.response.use(
         return axios(originalRequest);
       } catch (refreshError) {
         store.dispatch(AuthAction.signOut());
-        await signOut();
+        await signOut({ redirectTo: "/" });
         return Promise.reject(refreshError);
       }
     }

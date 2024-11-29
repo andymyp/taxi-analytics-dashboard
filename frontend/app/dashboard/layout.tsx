@@ -1,5 +1,9 @@
 import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
+import ReactQueryProvider from "@/components/providers/react-query-provider";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import Header from "@/components/ui-customs/header";
 
 interface Props {
   children: React.ReactNode;
@@ -9,8 +13,18 @@ export default async function DashboardLayout({ children }: Props) {
   const authSession = await auth();
 
   if (!authSession) {
-    return redirect("/");
+    return redirect("/", RedirectType.replace);
   }
 
-  return <main className="flex antialiased w-full h-screen">{children}</main>;
+  return (
+    <ReactQueryProvider>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <Header />
+          {children}
+        </SidebarInset>
+      </SidebarProvider>
+    </ReactQueryProvider>
+  );
 }
